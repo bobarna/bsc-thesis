@@ -12,3 +12,14 @@
 
 \tikzset{conv/.style={black,draw=black,fill=conv,rectangle,minimum height=1cm}}
 \tikzset{relu/.style={black,draw=black,fill=relu,circle,minimum size=0.1cm}}
+
+% colorful inline notes for todos
+\newcommandx{\mytodo}[2][1=]{
+    \todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}
+}
+\newcommandx{\inlinetodo}[2][1=]{
+    \todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,inline#1]{#2}
+}
+\newcommandx{\changetodo}[2][1=]{
+    \todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}
+}

@@ -14,6 +14,14 @@
    \xetexorluatextrue
 \fi
 
+% Use more than one optional parameter in a new commands
+\usepackage{xargs}                      
+% Coloured text etc.
+\usepackage{xcolor}  
+
+% Add colorful todonotes
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+
 \ifxetexorluatex
   \usepackage{fontspec}
 \else
@@ -41,7 +49,6 @@
 \usepackage{setspace} % For setting line spacing
 
 \usepackage[unicode]{hyperref} % For hyperlinks in the generated document.
-\usepackage{xcolor}
 \usepackage{listings} % For source code snippets.
 
 \usepackage[amsmath,thmmarks]{ntheorem} % Theorem-like environments.

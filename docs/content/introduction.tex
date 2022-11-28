@@ -1,5 +1,21 @@
 \chapter{\bevezetes}
 
+Data helps us model and understand our world more truthfully. Enabling the
+processing of the ever increase volume of data, and running more precise
+simulations necessitate continuous engineering efforts.
+
+An underlying assumption of model-reduction based techniques is that
+a low-dimensional structure can be found in high-dimensional data. This same
+assumption serves as the basis of many data processing applications
+\mytodo{image processing: eigenfaces, PCA, etc...}. Fluid simulation data has
+also been shown to exhibit lower-dimensional structure.
+\mytodo[inline]{In \url{https://github.com/wiewel/LatentSpaceSubdivision}, they
+learn this lower-dimensional embedding via a NN, and also learn the time
+advancement operator in this lower dimension.} 
+
+\mytodo[inline]{How much to say here? Move some of this to the Previous Work
+section?}
+
 Positioned at the crossroads of physical simulation, and deep learning
 techniques, our work is inspired by current advances in physics-based deep
 learning. We investigate the general problem of controlling simulation
@@ -19,6 +35,7 @@ as well as a base for our current work. We also give an overview of the overall
 structure of our thesis. 
 
 \section{Previous Work}
+\todo[inline]{Reduced Order Modeling}
 \subsection{Fluid Simulation}
 Most simulation methods are based on either an Eulerian (i.e.  grid-based), or
 Lagrangian (i.e. particle-based) representation of the fluid.  For an overview
@@ -94,6 +111,8 @@ deep learning methods in the context of physical simulations.
 In chapter~\ref{sec:mathematicalFoundations}, we give an overview of
 mathematical foundations, introducing notation used throughout the text, as well
 as discuss  preliminaries we base later chapters on. 
+
+\todo[inline]{rewrite structure with added reduced order modeling part}
 
 In chapter~\ref{chapter:physical-simulations}, the basics of physical
 simulations are introduced. Building on the multivariable calculus introduced in

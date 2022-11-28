@@ -215,3 +215,27 @@ use of an inductive physical bias to find solutions of an inverse problem.
   }
     \label{fig:learning-to-throw}
 \end{figure}
+
+\section{Reduced Order Physical Simulations}
+High-dimensional data usually exhibits lower-dimensional
+structure.
+
+\todo[inline]{examples of SVD, Fourier transform on images, and on curl fields}
+
+Although we can see that a lower-dimensional representation can yield comparable
+details, simulating the evolution in this representation is usually not
+straightforward.
+
+Frame the problem as learning $f_{\text{encoder}}$,
+$f_{\text{decoder}}$, and $f_{\text{time integration}}$ functions.
+
+NNs can learn these functions.
+\todo{Introduce NN approximations for these functions}
+
+The change-of-basis, as well as time advancement operators can also be deduced
+in an analytical fashion. In section~\ref{section:laplacian-eigenfluids}, we
+will look at this method applied to simulating fluid dynamics in
+a reduced-dimensional space.
+
+
+

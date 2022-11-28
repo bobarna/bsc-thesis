@@ -20,7 +20,11 @@
 \newcommand{\vikkonzulensCVezeteknev}{}
 \newcommand{\vikkonzulensCKeresztnev}{}
 
-\newcommand{\vikcim}{Reduced Order Modeling\\of Fluid Dynamics} % Cím
+\newcommand{\vikcim}{
+  Reduced Order Modeling\\
+  of Fluid Dynamics
+  \todo{How to divide title?}
+} % Cím
 \newcommand{\viktanszek}{\bmeiit} % Tanszék
 \newcommand{\vikdoktipus}{\bsc} % Dokumentum típusa (\bsc vagy \msc)
 \newcommand{\vikmunkatipusat}{szakdolgozatot} % a "hallgató nyilatkozat" részhez: szakdolgozatot vagy diplomatervet
@@ -33,9 +37,9 @@
 % \input{include/thesis-hu}
 \input{include/thesis-en}
 
-\input{include/preamble}
 % Add some self-defined definitions
 \input{include/my-variables}
+\input{include/preamble}
 
 \def\@testdef #1#2#3{%
   \def\reserved@a{#3}\expandafter \ifx \csname #1@#2\endcsname
@@ -61,7 +65,7 @@
 
 % Declaration and Abstract
 %Hallgatói nyilatkozat -- TDK és OTDK esetén törlendő!
-% \include{include/declaration} 
+\include{include/declaration} 
 % Összefoglaló -- TDK és OTDK esetén nem kötelező
 \include{content/abstract} 
 
