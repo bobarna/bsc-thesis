@@ -1,0 +1,544 @@
+\chapter{Controlling Laplacian Eigenfluids}
+\label{chapter:controlling-laplacian-eigenfluids}
+Many real world applications require us to optimize for some parameters of
+a physics-based problem. A toy example would be to optimize for some initial
+angle and velocity of a projectile to hit some target (see
+figure~\ref{fig:learning-to-throw}). As a more involved example, \citet{MinDrag}
+address finding the best shape to minimize drag. These kinds of inverse problems
+have been around for quite some time in engineering applications.
+
+Building on all of the previous ideas, we now introduce our investigation into
+the use of eigenfluids in fluid control problems, making use of their explicit
+closed-form description of a velocity field (equation~\eqref{eq:explicit-u}) to
+derive gradients used for optimization. Our main proposition is to achieve
+reduced-order modeling-like speed increase: in lieu of representing the fluid on
+a grid, we reconstruct the velocity field only at discrete points in space,
+while simulating the dynamics of the fluid in a reduced dimensional
+space as in equation~\eqref{eq:u-lin-comb}.
+
+In the following, we showcase different optimization scenarios, where we try out
+different aspects of controlling eigenfluids via \acf{DP} gradients. (See
+section~\ref{dp-loss}.)
+
+We start with examples of "traditional" optimization scenarios. By
+"traditional", we mean finding individual solutions to problems via some
+optimization technique -- in our case, \acf{GD}. Moving further, we look for
+generalized solutions to a set of problems by training \acfp{NN}.
+
+After trying out multiple recent frameworks aimed at differentiable simulations
+\cite{warp2022,difftaichi}, we implemented all of our experiments
+using $\Phi_{Flow}$ \cite{holl2019pdecontrol}.
+
+\section{Matching Velocities}\label{section:matching-velocities}
+To verify the feasibility of our technique before moving on to more involved
+setups, our most straightforward optimization scenario is finding an initial
+basis coefficient vector $\vb{w}_0 \in \mathbb{R}^N$ for an eigenfluid
+simulation using $N=16$ basis fields, such that when simulated for $t$ time
+steps, the reconstructed $\mathcal{R}\vb{w}_t = \vb{u}_t$ velocity
+field will match some precalculated $\vb{u}^*: [0,\pi]\times[0,\pi] \to
+\mathbb{R}^2$ target velocity field:
+
+\begin{equation}\label{eq:match-vel-loss}
+  L(\vb{w}) = \left|
+  \mathcal{R}\mathcal{P}^{t}(\vb{w}) - \vb{u}^*
+  \right|_2^2,
+\end{equation}
+
+where $\mathcal{P}^t(\vb{w}) = \mathcal{P} \circ \mathcal{P} \dots \circ
+\mathcal{P}(\vb{w})$ is the physical simulation of base coefficients $\vb{w}$
+(in the reduced dimension) $t$ times.
+
+For the optimization, we initialize a $\vb{w}_\text{init} \in \mathbb{R}^N$
+vector with random numbers (from a normal/Gaussian distribution), and run the
+eigenfluid simulation for $t$ time steps, after which, we measure the error as
+given by loss function \eqref{eq:match-vel-loss}. Relying on backpropagation to
+derive the necessary gradients, we use the \ac{GD} optimization method as
+introduced in equations~\eqref{eq:gd-steps} to iteratively find a vector
+$\vb{w}_{optim}$, yielding a low scalar loss $L(\vb{w}_{optim})$.
+
+To be able to make some further evaluation of the end results possible, we step
+an eigenfluid solver for time $t$ to precalculate the target $\vb{u}^*$ velocity
+field, sampled on a $32\times32$ grid. We denote the initial base coefficient
+vector of this reference simulation $\vb{w}^*$, but keep in mind that the
+optimization has absolutely zero knowledge of this value, as it sees only the
+$32\times32\times2$ velocity values of $\vb{u}^*$ at time $t$. Also, these
+values could have been precalculated from any other kind of fluid simulation as
+well, or even just initialized randomly. Deriving $\vb{u}^*$ as the result of an
+eigenfluid simulation has the added benefit of exposing to us a solution
+$\vb{w}^*$ that we can use to compare with the solution of the optimizer.
+
+We test this setup on two scenarios, with differing the number of time steps
+simulated: first with $t=16$, and then with $t=100$.
+
+For $t=16$ simulation steps, starting from a loss of around $400$, the first
+$100$ \ac{GD} optimization steps with $\lambda=10^{-3}$ reduced the loss to
+under $1.0$, while $200$ steps further decreased it to under $4*10^{-4}$, with
+each further step still continuously decreasing the error. 
+
+Naturally, this very basic method has its limits.  Optimizing for initial
+coefficients based solely on that when reconstructed on a $32\times32$ grid
+after $100$ steps of a non-linear simulation, they should match a given velocity
+field, proved to be a substantially harder problem, as even a relatively small
+error can accumulate into major deviations over these longer time steps,
+resulting in much less stable gradients. With using the same learning rate, the
+optimization diverged almost instantly. With some tuning of the learning rate
+$\lambda$ in the range of $[10^{-4}, 10^{-8}]$, we were able to get the loss
+below $0.14$.  (Starting from an initial loss of $320$ from the random
+initialization.) 
+
+We visualize the results of these two scenarios in
+Figure~\ref{fig:matching-velocities}. It is interesting to observe that even
+though the optimization had absolutely no knowledge of $\vb{w}^*$, only
+a comparison with a precomputed $\vb{u^*}$ velocity field at time step $100$, the
+optimized $\vb{w}_{optim}$ vector already starts to look similar to $\vb{w}^*$.
+Keep in mind that this is not guaranteed at all, as highlighted with the
+learning to throw example on figure~\ref{fig:learning-to-throw}. In some other
+cases of running this optimization setup, we also observed $\vb{w}_{optim}$s
+that are completely different from $\vb{w}^*$. Due to the physical constraints
+of the eigenfluids simulation, in these cases the optimization could not change
+any of the $16$ values of $\vb{w}_{optim}$ locally in a way that would further
+reduce the loss below some small number, and was stuck in a local minima of the
+parameter space.
+
+Although there are a number of ways to tweak this setup, we can already verify
+from these results that  the flow of the gradients is working, and is ready to
+be tested in more advanced scenarios.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/finding-initial-velocities/t_16_coefficients.png}
+    \caption{$\vb{w}_{init}$, $\vb{w}_{optim}$, and
+    $\vb{w}^*$, optimizing for velocity field after $16$ time steps}
+    \label{fig:16-timesteps-coeffs}
+  \end{subfigure}\par\medskip
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/finding-initial-velocities/t_16_velocities.png}
+    \caption{Target $\vb{u}^*$, and $\vb{u}^{16}$, reconstructed from
+      $\mathcal{P}^{16}(\vb{w}_{optim})$\\}
+    \label{fig:16-timesteps-vel}
+  \end{subfigure}\par\medskip
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/finding-initial-velocities/t_100_coefficients.png}
+    \caption{Initial basis coefficients $\vb{w}_{init}$, $\vb{w}_{optim}$, and
+    $\vb{w}^*$, optimizing for velocity field after $100$ time steps\\}
+    \label{fig:100-timesteps-coeffs}
+  \end{subfigure}\par\medskip
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/finding-initial-velocities/t_100_velocities.png}
+    \caption{Target $\vb{u}^*$, and $\vb{u}^{100}$, reconstructed from
+      $\mathcal{P}^{100}(\vb{w}_{optim})$}
+    \label{fig:100-timesteps-vel}
+  \end{subfigure}
+  \caption{Results of optimizing for an initial $\vb{w}_0$ basis coefficient
+    vector that matches a target velocity field $\vb{u}^*$ when reconstructed
+    after simulating for $t$ time steps.
+  }
+  \label{fig:matching-velocities}
+\end{figure}
+
+\section{Controlling Shape Transitions}
+\label{section:controlling-shape-transitions}
+In the following, we showcase an optimization scenario, with the target of
+controlling the transition between two marker shapes in a fluid simulation
+setup. 
+\footnote{Note that we use the terms \textit{smoke}, \textit{marker},
+\textit{density}, and \textit{scalar valued density/marker function}
+interchangeably throughout the text.}
+The work of \citet{holl2019pdecontrol} formulated this problem in an
+Eulerian representation, with explicitly simulating the shapes as scalar marker
+densities being advected by the velocity field of the simulated fluid. 
+
+Playing to the strength of the eigenfluids method, our method makes use of an
+explicit, closed-form description of the fluid velocity $\vb{u}$ as in
+equation~\eqref{eq:explicit-u}. We stay independent of a grid resolution, and
+approximate the 2D shapes via a set of sample points. We reconstruct the
+velocity field only partially at these discrete points as needed for the
+advection of these particles. This results in both a faster fluid simulation as
+well as optimization as compared to fully simulating an $N\times N$ grid,
+advecting a marker density, and backpropagating gradients of a physical
+simulation with much more degrees of freedom.
+
+We formulate three different control problems, each with a different mean to
+exert control over the fluid simulation.
+\begin{itemize}
+  \item First, in a similar vein to the problem statement in
+    section~\ref{section:matching-velocities}, we are looking for an initial
+    coefficient vector $\vb{w}_0$ of an eigenfluids simulation, such that when
+    simulated for $t$ time steps, the reconstructed velocity field advects some
+    initial points to the desired positions.
+  \item Second, we optimize for some force vector $\vb{f}\in \mathbb{R}^{t\times
+    N}$, such that $\vb{f}_t \in \mathbb{R}^N$ applied as external force to each
+    time step of an eigenfluid simulation, it yields the desired outcome.
+  \item Finally, we generalize the problem to looking for a function that exerts
+    the necessary control force at time $t$, such that particles currently at
+    positions $\vb{p}_t$ end up at target positions $\vb{p}_{t+1}$ at the
+    next time step. We formulate this third task as a \acf{NN} model in the
+    form $\vb{f}(\vb{p_t}, \vb{p_{t+1}}, \vb{w}_{t}, \boldsymbol\theta)$, also
+    passing in the current basis coefficient vector $\vb{w}_t$, and optimizing
+    for its parameters $\boldsymbol\theta$ to yield the desired outcome.
+\end{itemize}
+
+In each of these tasks, a velocity field $\vb{u} = \mathcal{R}\vb{w}$ advects
+a set of initial points $\vb{p}_0 = \left[\vb{p}_0^0,\dots, \vb{p}_0^i\right]$
+to line up with target positions $\vb{p}_t = \left[\vb{p}_t^0, \dots,
+\vb{p}_t^i\right]$.  We formulate this as 
+
+\begin{equation}\label{eq:advecting-particles-loss}
+  L(\vb{w}, \vb{p}_0, \vb{p}_t)
+  = \left| \mathcal{P}^{t}(\vb{p}_0, \vb{w}) - \vb{p}_t\right|_2^2 
+  = \sum_{i}\left|\mathcal{P}^{t}(p_0^i, \vb{w}) - p_t^i\right|_2^2, 
+\end{equation}
+
+where $\mathcal{P}^t(\vb{w}, \vb{p}) = \underbrace{\mathcal{P} \circ
+\mathcal{P}\circ \dots \circ \mathcal{P}(\vb{w}, \vb{p})}_{t \text{ times}}$
+denotes the physical simulation of base coefficients $\vb{w}$ and points
+$\vb{p}$ in $\vb{u} = \mathcal{R}\vb{w}$, the velocity field reconstructed from
+$\vb{w}$.  We use a simple mean-square error (also known as squared $L_2$ norm)
+for measuring the error.
+
+\subsection{Sampling}\label{section:sampling}
+Advection of some scalar quantity in a fluid is an abstract problem that
+describes many real-world phenomena. We can think of the transport of some ink
+dropped into water, clouds in the air, or some buoyant smoke rising. Phenomena
+such as these can be modeled as a density function $\psi(\vb{x})$ defined over
+the simulation domain $D$. In a fluid with velocity $\vb{u}$, and $\div{\vb{u}}
+= 0$ (i.e. the fluid is incompressible), the advection is governed by the
+equation
+
+$$\pdv{\psi}{t} + \vb{u}\cdot \grad{\psi} = 0.$$
+
+In Eulerian fluid simulation methods \cite{StableFluids}, both
+$\vb{u}$ and $\vb{\psi}$ are sampled on grids, numerically approximating the
+evolution of the field quantities. Instead, our method proposes sampling the
+density function at discrete particle positions, thus rephrasing the process in
+a Lagrangian way.
+
+In the context of Laplacian eigenfluids, a Lagrangian viewpoint is especially
+inviting, as the explicit description of the fluid velocity $\vb{u}$
+(equation~\eqref{eq:explicit-u}) allows us to reconstruct $\vb{u}$ only
+partially, while keeping the simulation of the fluid dynamics in a reduced
+dimensional space. In a forward physics simulation, this can already lead to
+substantial speed-ups, but this formulation seems especially promising when the
+backpropagation of variables is desired, such as the optimization scenarios
+introduced herein.
+
+A straightforward way to define a shape is
+\begin{equation}\label{eq:binary-shape-function}
+\psi(\vb{x}) = 
+\begin{cases}
+  1, & \qq*{inside the shape}\\
+  0, & \text{outside the shape}.\\
+\end{cases}
+\end{equation}
+Sampled on an $N \times N$ grid, this is equivalent to a binary image with
+a resolution of $N \times N$. Moreover, when sampled on a grid, and advected,
+it is straightforward to interpret the resulting grid and its values as
+a grayscale image with values $[0,\dots,1]$.
+
+Often used in 3D scanning, reconstruction and scene understanding problems,
+a \acf{SDF} can be defined as the distance to the surface (in 2D, the edge) of
+an object, with positive values outside, and negative values inside. In our
+implementation, we define our shapes as \acp{SDF}. For example, a circle with
+radius $r$ and center $\vb{o} = (o_x, o_y)^T$ is defined as
+
+$$\text{SDF}_{\text{circle}}(\vb{x, \vb{o}, r}) 
+  = \abs{\vb{x}-\vb{o}} - r
+  = \sqrt{(x-o_x)^2 + (y-o_y^2)} - r.$$
+
+For simulating (and visualizing) the advection dynamics of these shapes, we
+transform the SDFs to a binary form as in
+equation~\eqref{eq:binary-shape-function}.
+
+As we neither want to lose too much information about our original function, nor
+want to keep track of an unnecessary number of points, the feasibility of this
+method necessitates an efficient sampling of $\psi(\vb{x})$. We use a simple
+rejection-based sampling technique. Transforming the shapes to fit inside the
+unit rectangle $[0,1]\times[0,1]$, we generate random points
+$\vb{p}_\text{sample}\in [0,1]\times[0,1]$, rejecting them if they lie outside
+the shape.
+
+As we consider shape transitions given start and target shapes $S_\text{0}$ and
+$S_\text{t}$, it is important to take into consideration the connection between
+these shapes. To balance finding spatial correspondences between the shapes,
+while still approximating their unique shapes, we sample $O$ overlapping, and
+$U$ unique points. For the overlapping points, we accept only
+$\vb{p}_\text{sample} \in S_\text{0} \cup S_\text{t}$, i.e. we reject points
+that are not inside both shapes (transforming both shapes to fit inside the unit
+square for the sampling). For the unique points we sample a different set of
+points for each shape. 
+
+To generate low-discrepancy, quasi-random 2D coordinates, we use a Halton
+sequence \cite{halton}, giving deterministic coordinates, given coprimes $p$
+and $q$. Using one set of primes for sampling $O$ overlapping points, and
+another set of primes for sampling $U$ unique points can give us further
+overlapping points, as the proposed (but potentially rejected) sequence of
+points will be the same for both shapes.
+
+We further generate $T=5$ trivial points that are hand-picked to best resemble
+the given shape, as well as line up between different shapes. We choose these to
+be the center, upper right, upper left, lower left, and lower right corners of
+the shape. 
+
+In conclusion, our final set of $\vb{p}_0$ initial, and $\vb{p}_t$ target sample
+positions are given by concatenating the $O$ overlapping, $U$ unique, and $T$
+trivial points for each shape, resulting in two set of sample points $\vb{p}_0,
+\vb{p}_t \in \mathbb{R}^{O+U+T}$.
+
+Figure~\ref{fig:sampling} shows the result of our sampling strategy for
+a triangle and a circle shape.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/sampling/points.png}
+    \caption{The $O=30$ overlapping (blue), $U=30$ unique (green), and $T=5$
+    trivial (red) points for each shape.}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    % \includegraphics[width=\textwidth]{figures/sampling/smokes.png}
+    \includegraphics[width=\textwidth]{figures/sampling/smokes_no_bar.png}
+    \caption{Sample points plotted over $\psi_\text{triangle}
+    + \psi_\text{circle}$.}
+  \end{subfigure}\par\medskip
+  \caption{Sampling strategy for transitioning from a triangle to a circle.
+  Halton series with base $(2,7)$ and $(3,11)$ were used to generate the
+  overlapping and unique positions, respectively.}
+  \label{fig:sampling}
+\end{figure}
+
+\subsection{Optimizing for Initial Velocity}\label{section:initial-velocity} 
+As introduced the problem in the beginning of the chapter (see
+equation~\ref{eq:advecting-particles-loss}), our goal is to find an initial
+velocity field $\mathcal{R}\vb{w} = \vb{u}$ that advects points $\vb{p}_0$ to
+line up with target positions $\vb{p_t}$ after $t$ steps. 
+We can write optimizing for base coefficients $\vb{w}$ as:
+
+$$\arg\min_{\vb{w}} \left| \mathcal{P}^{t}(\vb{p}^0, \vb{w})
+- \vb{p}^t\right|_2^2.$$
+
+Making use of the differentiability of our physical simulator $\mathcal{P}$, and
+the multivariable chain rule for deriving the gradient of the above
+$\mathcal{P}^t = \mathcal{P}\circ\dots\circ\mathcal{P}$ function composition, we
+can derive its gradient with respect to the initial coefficients:
+$$\frac{\partial \mathcal{P}^t(\vb{w},\vb{p})}{\partial \vb{w}}.$$
+
+Finally, as introduced in \eqref{eq:gd-steps}, we simply iterate a \ac{GD}
+optimizer to find a (good enough) solution for our above minimization problem:
+
+$$\vb{w}_{\text{better}} = \vb{w} - \lambda
+\frac{
+    \partial L(\vb{w}, \vb{p}_0, \vb{p}_t)
+}{
+    \partial \vb{w}
+},$$
+
+where $L$ is the same as in equation~\eqref{eq:advecting-particles-loss}:
+\begin{equation*}
+  L(\vb{w}, \vb{p}_0, \vb{p}_t)
+  = \left| \mathcal{P}^{t}(\vb{p}_0, \vb{w}) - \vb{p}_t\right|_2^2.
+\end{equation*}
+
+The main difficulty of this non-linear optimization problem lies in that we have
+no control over the natural flow of the fluid besides supplying an initial
+$\vb{w}_0$ vector.
+
+We showcase two different setups in Figure~\ref{fig:points-vel-only}, with the
+details of both experiments described in Table~\ref{table:vel-optim-details}.
+
+\begin{table}[!h]
+  \caption{Details of the 2 optimization scenarios shown in
+  Figure~\ref{fig:points-vel-only}}
+  \label{table:vel-optim-details}
+  \centering
+\begin{tabular}{r|cc}
+  \multicolumn{1}{l}{}               
+  & \multicolumn{1}{|l}{\textbf{Figure~\ref{fig:points-vel-only-small}}}
+  & \multicolumn{1}{l}{\textbf{Figure~\ref{fig:points-vel-only-big}}}\\ \hline
+N                                  & 16                                     & 36                                     \\ \hline
+Sampling size for smoke simulation & 32                                     & 32                                     \\ \hline
+Eigenfluid initialization time     & 6.19 sec                               & 68.47 sec                              \\ \hline
+Time for 51 optimization steps     & 108.05 sec                             & 230.48 sec                             \\ \hline
+Initial loss                       & 2.3                                    & 2.19                                   \\ \hline
+Final loss                         & 0.08                                   & 0.09                                   \\ \hline
+Number of overlapping points $O$                                  & 0                                      & 30                                     \\ \hline
+Number of unique points $U$                                  & 0                                      & 30                                     \\ \hline
+Number of trivial points $T$                                  & 5                                      & 0                                      \\ \hline
+\end{tabular}
+\end{table}
+\begin{figure}
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \begin{subfigure}{0.4\textwidth}
+      \centering
+      \includegraphics[width=0.7\textwidth]{figures/points-velocity-only/T5/start_target.png}
+      \caption{$O=0$, $U=0$, $T=5$} 
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+      \centering
+      \includegraphics[width=0.7\textwidth]{figures/points-velocity-only/O30_U30_T0/start_target.png}
+      \caption{$O=30$, $U=30$, $T=0$}
+    \end{subfigure}
+    \caption{Initial (blue), and target (red) sample points.}
+  \end{subfigure}\\
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/points-velocity-only/T5/trajectory_horizontal.png}
+    \caption{Using $N=16$ basis fields, and the $T=5$ trivial points.}
+    \label{fig:points-vel-only-small}
+  \end{subfigure}\\
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/points-velocity-only/O30_U30_T0/trajectory_horizontal.png}
+    \caption{Using $N=36$ basis fields, and using a total of $60$ sampling
+    points.}
+    \label{fig:points-vel-only-big}
+  \end{subfigure}\\
+  \caption{Solving the shape transition problem by optimizing for an initial
+  coefficient vector $\vb{w}$ without any further control over the simulation.}
+  \label{fig:points-vel-only}
+\end{figure}
+
+\subsection{Control Force Estimation}\label{section:cfe}
+In this scenario, we optimize for a force vector $\vb{f} \in \mathbb{R}^{t\times
+N}$, such that $\vb{f}_t \in \mathbb{R}^N$ applied as external force at each
+time step of an eigenfluid simulation, some initial positions $\vb{p}_0$ will be
+advected to target positions $\vb{p}_t$ after $t$ time steps:
+
+$$\arg\min_{\vb{f}} \left| \mathcal{P}^{t}(\vb{p}_0, \vb{w}, \vb{f})
+  - \vb{p}_t\right|_2^2,$$
+
+where $\mathcal{P}^{t}(\vb{p}_0, \vb{w}, \vb{f}) = \mathcal{P} \circ \dots
+\circ \mathcal{P}(\vb{p}_0, \vb{w}, \vb{f})$ denotes simulating the
+physical system for $t$ time steps, applying $\vb{f}_t$ force at each
+time step.
+
+Results of the optimization are shown in Figure~\ref{fig:f_optim}.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.3\textwidth]{figures/f-optim/blue_start_red_target.png}
+    \caption{Initial (blue), and target (red) sample points. ($O=1$, $U=1$,
+    $T=5$)}
+  \end{subfigure}\\
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/f-optim/trajectory_horizontal.png}
+    \caption{Optimized trajectory of the sample points underlying the
+    optimization.}
+  \end{subfigure}\par\medskip
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/f-optim/smoke_trajectory_horizontal.png}
+    \caption{Smoke advection for qualitative comparison, reconstructed on
+    a $100\times 100$ grid.}
+  \end{subfigure}\par\medskip
+  \caption{Force optimization results with $16$ time steps, and using $N=16$
+  basis fields.}
+  \label{fig:f_optim}
+\end{figure}
+
+\pagebreak
+\subsection{Neural Network Training}\label{section:nn-training}
+We generalize the \acf{CFE} problem by defining a function
+$\vb{f}(\vb{p}_0,\vb{p}_t,\vb{w}): \mathbb{R}^{2\cdot2(O+U+T)+N}\to
+\mathbb{R}^N$, that gives a force vector $\vb{f} \in \mathbb{R}^N$ to be
+applied at the current time step to move points $\vb{p}_0$ to $\vb{p}_t$ in the
+next time step. Its inputs are the $(x,y)$ coordinates of $\vb{p}_0$ and
+$\vb{p}_t$, as well as the basis coefficient vector $\vb{w}$ at the current
+time step concatenated after each other, giving $2\cdot2(O+U+T)+N$ values, where
+$O$, $U$, and $T$ denote the number of overlapping, unique, and trivial sample
+points, respectively, as introduced in section~\ref{section:sampling}.
+
+We approximate the \ac{CFE} function $\vb{f}$ with a Control Force Estimator
+\acf{NN} $\vb{f}(\vb{p}_0, \vb{p}_t, \vb{w}, \vb{\theta})$. 
+
+Each layer is constructed exactly as described in
+equation~\eqref{nn-single-layer-math} with ReLU non-linearities, making the
+resulting concatenation of layers the same as in
+equation~\eqref{eq:nn-layers-math}. Figure~\ref{fig:nn-architecture} gives an
+overview of our \ac{NN} architecture. 
+
+\input{figures/nn-architecture.tex}
+
+As the input size to the \ac{NN} is dependent on the specific problem, the
+number of trainable parameters also varies, and a new \ac{NN} has to be trained
+when using a different number of basis fields, or different number of total
+sample points. As an example, for $N=16$ basis fields, and $75$ sample points,
+the \ac{NN} has $337 392$ trainable parameters.
+
+\subsection*{Overfitting to a single training sample}
+Testing the setup, we overfit the \ac{NN} to a single training sample. Plotting
+the results of the time evolution on figure~\ref{fig:NN-overfit}, we observe
+that a reduced degrees of freedom can yield comparable, or even better results
+with the same setup, and training time. 
+
+Using an Adam optimizer \cite{adam} with learning rate $10^{-3}$, the results
+shown in Figure~\ref{fig:NN-overfit} were achieved in $260$ epochs. The
+training took $53.94$ seconds.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/nn-training/NN_N16_triangle_overfit_horizontal.png}
+    \caption{$N=16$ basis fields}
+  \end{subfigure}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/nn-training/NN_N36_triangle_overfit_horizontal.png}
+    \caption{$N=36$ basis fields}
+  \end{subfigure}
+  \caption{Time evolution of simulating two overfitted \ac{CFE} \acp{NN} to
+  a single shape transition for $16$ time steps $t=[0\dots15]$. Using $O=30$
+overlapping, $U=40$ unique, and $T=5$  trivial sample points.}
+  \label{fig:NN-overfit}
+\end{figure}
+
+\subsection*{Training}
+We generate $2000$ samples, using $1800$ for training, and $200$ for validation.
+Using $N=16$ basis fields, we train the \ac{NN} for the \ac{CFE} problem
+detailed above. (See Figure~\ref{fig:NN-shape-transition-train}.)
+
+At the end of the training, we generate further data the \ac{NN} has not seen
+during training to further test generalization.
+(See Figure~\ref{fig:NN-shape-transition-test}.)
+
+Using an Adam \cite{adam} optimizer with learning rate $10^{-3}$, the results
+shown in Figure~\ref{fig:NN-shape-transition} were achieved in $260$ epochs. The
+training took $1201.74$ seconds ($20$ minutes).
+
+As we did not experience any overfitting issues during training, no additional
+regularization schemes were applied. 
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/nn-final/trained_trajectories_horizontal.png}
+    \caption{Performance after training on the \textbf{training data}. (Randomly
+    sampled.)}
+    \label{fig:NN-shape-transition-train}
+  \end{subfigure}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/nn-final/test_trajectories_horizontal.png}
+    \caption{Testing on previously unseen \textbf{test data}. (Randomly
+      sampled.)}
+    \label{fig:NN-shape-transition-test}
+  \end{subfigure}
+  \caption{Randomly sampled time evolution of controlled shape transition
+  tasks. Using $N=16$ basis fields, sampling the smokes on a $32\times 32$ grid,
+  approximating them with $O=30$ overlapping, $U=40$ unique and $T=5$ trivial
+  sample points, through $16$ time steps $t=[0\dots15]$.}
+  \label{fig:NN-shape-transition}
+\end{figure}

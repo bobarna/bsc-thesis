@@ -1,0 +1,14 @@
+# install these requirements with pip with the command:
+# 
+# ```
+# pip install -r requirements.txt
+# ```
+
+
+notebook
+phiflow
+dash
+torch
+matplotlib
+numpy
+skimage

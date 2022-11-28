@@ -1,0 +1,367 @@
+@inproceedings{Baraff1997PhysicallyBM,
+  title={Physically Based Modeling: Principles and Practice},
+  author={David Baraff and Andrew P. Witkin},
+  year={1997},
+  url={https://www.cs.cmu.edu/~baraff/sigcourse/}
+}
+@book{chengfield,
+  title={Field and Wave Electromagnetics},
+  author={Cheng, D.K.},
+  isbn={9780201528206},
+  lccn={88014139},
+  series={Addison-Wesley series in electrical engineering},
+  url={https://books.google.hu/books?id=hjhBAQAAIAAJ},
+  year={1989},
+  publisher={Addison-Wesley}
+}
+
+@article{halton,
+author = {Halton, J. H.},
+title = {Algorithm 247: Radical-Inverse Quasi-Random Point Sequence},
+year = {1964},
+issue_date = {Dec. 1964},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {7},
+number = {12},
+issn = {0001-0782},
+url = {https://doi.org/10.1145/355588.365104},
+doi = {10.1145/355588.365104},
+journal = {Commun. ACM},
+month = {dec},
+pages = {701–702},
+numpages = {2}
+}
+
+@article{adam,
+author = {Kingma, Diederik and Ba, Jimmy},
+year = {2014},
+month = {12},
+pages = {},
+title = {Adam: A Method for Stochastic Optimization},
+journal = {International Conference on Learning Representations}
+}
+
+@inproceedings{StableFluids,
+author = {Stam, Jos},
+title = {Stable Fluids},
+year = {1999},
+isbn = {0201485605},
+publisher = {ACM Press/Addison-Wesley Publishing Co.},
+address = {USA},
+url = {https://doi.org/10.1145/311535.311548},
+doi = {10.1145/311535.311548},
+booktitle = {Proceedings of the 26th Annual Conference on Computer Graphics and Interactive Techniques},
+pages = {121–128},
+numpages = {8},
+keywords = {interactive modeling, Navier-Stokes, stable solvers, animation of fluids, implicit elliptic PDE solvers, gaseous phenomena, advected textures},
+series = {SIGGRAPH '99}
+}
+
+@article{ModelReductionFluidSim,
+author = {Liu, Beibei and Mason, Gemma and Hodgson, Julian and Tong, Yiying and Desbrun, Mathieu},
+title = {Model-Reduced Variational Fluid Simulation},
+year = {2015},
+issue_date = {November 2015},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {34},
+number = {6},
+issn = {0730-0301},
+url = {https://doi.org/10.1145/2816795.2818130},
+doi = {10.1145/2816795.2818130},
+abstract = {We present a model-reduced variational Eulerian integrator for
+            incompressible fluids, which combines the efficiency gains of
+            dimension reduction, the qualitative robustness of coarse spatial
+            and temporal resolutions of geometric integrators, and the
+            simplicity of sub-grid accurate boundary conditions on regular grids
+            to deal with arbitrarily-shaped domains. At the core of our
+            contributions is a functional map approach to fluid simulation for
+            which scalar- and vector-valued eigenfunctions of the Laplacian
+            operator can be easily used as reduced bases. Using a variational
+            integrator in time to preserve liveliness and a simple, yet accurate
+            embedding of the fluid domain onto a Cartesian grid, our
+            model-reduced fluid simulator can achieve realistic animations in
+            significantly less computational time than full-scale
+            non-dissipative methods but without the numerical viscosity from
+            which current reduced methods suffer. We also demonstrate the
+            versatility of our approach by showing how it easily extends to
+            magnetohydrodynamics and turbulence modeling in 2D, 3D and curved
+            domains.},
+journal = {ACM Trans. Graph.},
+month = {nov},
+articleno = {244},
+numpages = {12},
+keywords = {model reduction, eulerian simulation, energy preservation, computational fluid dynamics, sub-grid-resolution geometry}
+}
+
+@article{Wiewel2019LatentSP,
+  title={Latent Space Physics: Towards Learning the Temporal Evolution of Fluid Flow},
+  author={Steffen Wiewel and Moritz Becher and Nils Th{\"u}rey},
+  journal={Computer Graphics Forum},
+  year={2019},
+  volume={38}
+}
+
+@inproceedings{LatentSpaceSubdivision,
+author = {Wiewel, S. and Kim, B. and Azevedo, V. C. and Solenthaler, B. and Thuerey, N.},
+title = {Latent Space Subdivision: Stable and Controllable Time Predictions for Fluid Flow},
+year = {2020},
+publisher = {Eurographics Association},
+address = {Goslar, DEU},
+url = {https://doi.org/10.1111/cgf.14097},
+doi = {10.1111/cgf.14097},
+abstract = {We propose an end-to-end trained neural network architecture to robustly predict the complex dynamics of fluid flows with high temporal stability. We focus on single-phase smoke simulations in 2D and 3D based on the incompressible Navier-Stokes (NS) equations, which are relevant for a wide range of practical problems. To achieve stable predictions for long-term flow sequences with linear execution times, a convolutional neural network (CNN) is trained for spatial compression in combination with a temporal prediction network that consists of stacked Long Short-Term Memory (LSTM) layers. Our core contribution is a novel latent space subdivision (LSS) to separate the respective input quantities into individual parts of the encoded latent space domain. As a result, this allows to distinctively alter the encoded quantities without interfering with the remaining latent space values and hence maximizes external control. By selectively overwriting parts of the predicted latent space points, our proposed method is capable to robustly predict long-term sequences of complex physics problems, like the flow of fluids. In addition, we highlight the benefits of a recurrent training on the latent space creation, which is performed by the spatial compression network. Furthermore, we thoroughly evaluate and discuss several different components of our method.},
+booktitle = {Proceedings of the ACM SIGGRAPH/Eurographics Symposium on Computer Animation},
+articleno = {2},
+numpages = {11},
+location = {Virtual Event, Canada},
+series = {SCA '20}
+}
+
+@inproceedings {EigenfluidCompression,
+booktitle = {Eurographics/ ACM SIGGRAPH Symposium on Computer Animation},
+editor = {Ladislav Kavan and Chris Wojtan},
+title = {{Compressing Fluid Subspaces}},
+author = {Jones, Aaron Demby and Sen, Pradeep and Kim, Theodore},
+year = {2016},
+publisher = {The Eurographics Association},
+ISSN = {1727-5288},
+ISBN = {978-3-03868-009-3},
+DOI = {10.2312/sca.20161225}
+}
+
+@misc{warp2022,
+title= {Warp: A High-performance Python Framework for GPU Simulation and Graphics},
+author = {Miles Macklin},
+month = {March},
+year = {2022},
+note= {NVIDIA GPU Technology Conference (GTC)},
+howpublished = {\url{https://github.com/nvidia/warp}}
+}
+
+@misc{LearnToThrow,
+title={Learn to Throw Example},
+author={Holl, Philip},
+url={https://tum-pbs.github.io/PhiFlow/Learn_to_Throw_Tutorial.html}
+}
+
+@article{MinDrag, 
+title={Numerical investigation of minimum
+drag profiles in laminar flow using deep learning surrogates}, 
+volume={919},
+DOI={10.1017/jfm.2021.398}, 
+journal={Journal of Fluid Mechanics},
+publisher={Cambridge University Press}, 
+author={Chen, Li-Wei and Cakal, Berkay A. and Hu, Xiangyu and Thuerey, Nils},
+year={2021}, 
+pages={A34}
+}
+
+@book{BridsonFluid,
+author = {Bridson, R.},
+year = {2015},
+url = {https://doi.org/10.1201/9781315266008},
+doi = {10.1201/9781315266008},
+title = {Fluid simulation for computer graphics, Second Edition},
+journal = {Fluid Simulation for Computer Graphics, Second Edition}
+}
+
+@inproceedings{FluidNotes,
+author = {Bridson, Robert and M\"{u}ller-Fischer, Matthias},
+title = {Fluid Simulation: SIGGRAPH 2007 Course NotesVideo Files Associated with This Course Are Available from the Citation Page},
+year = {2007},
+isbn = {9781450318235},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1281500.1281681},
+doi = {10.1145/1281500.1281681},
+abstract = {Animating fluids like water, smoke, and fire by physics-based
+            simulation is increasingly important in visual effects and is
+            starting to make an impact in real-time games. This course goes from
+            the basics of 3D fluid flow to the state of the art in graphics. We
+            will begin with an intuitive explanation of the important concepts
+            in fluid simulation, and as we progress demonstrate how to implement
+            an effective smoke and water simulation system, complete with
+            irregular curved boundaries and surface tension. The last half of
+            the course will cover advanced topics such as fire and explosions,
+            adaptive grid methods, real-time-capable algorithms together with
+            the latest technology in hardware acceleration, and non-Newtonian
+            fluids like sand. Intuition and implementation details will be
+            underscored throughout.},
+booktitle = {ACM SIGGRAPH 2007 Courses},
+pages = {1–81},
+numpages = {81},
+location = {San Diego, California},
+series = {SIGGRAPH '07}
+}
+
+@article{KelagerSPH,
+    author = {Kelager, Micky},
+    year = {2006},
+    month = {01},
+    pages = {},
+    title = {Lagrangian Fluid Dynamics Using Smoothed Particle Hydrodynamics},
+    volume = {77},
+    journal = {Camb. Monogr. Mech.}
+}
+
+@article{difftaichi,
+  title={DiffTaichi: Differentiable Programming for Physical Simulation},
+  author={Hu, Yuanming and Anderson, Luke and Li, Tzu-Mao and Sun, Qi and Carr,
+          Nathan and Ragan-Kelley, Jonathan and Durand, Fr{\'e}do},
+  journal={ICLR},
+  year={2020}
+}
+
+@article{scalable-eigenfluids,
+author = {Cui, Qiaodong and Sen, Pradeep and Kim, Theodore},
+title = {Scalable Laplacian Eigenfluids},
+year = {2018},
+issue_date = {August 2018},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {37},
+number = {4},
+issn = {0730-0301},
+url = {https://doi.org/10.1145/3197517.3201352},
+doi = {10.1145/3197517.3201352},
+abstract = {The Laplacian Eigenfunction method for fluid simulation, which we refer to as Eigenfluids, introduced an elegant new way to capture intricate fluid flows with near-zero viscosity. However, the approach does not scale well, as the memory cost grows prohibitively with the number of eigenfunctions. The method also lacks generality, because the dynamics are constrained to a closed box with Dirichlet boundaries, while open, Neumann boundaries are also needed in most practical scenarios. To address these limitations, we present a set of analytic eigenfunctions that supports uniform Neumann and Dirichlet conditions along each domain boundary, and show that by carefully applying the discrete sine and cosine transforms, the storage costs of the eigenfunctions can be made completely negligible. The resulting algorithm is both faster and more memory-efficient than previous approaches, and able to achieve lower viscosities than similar pseudo-spectral methods. We are able to surpass the scalability of the original Laplacian Eigenfunction approach by over two orders of magnitude when simulating rectangular domains. Finally, we show that the formulation allows forward scattering to be directed in a way that is not possible with any other method.},
+journal = {ACM Trans. Graph.},
+month = {jul},
+articleno = {87},
+numpages = {12},
+keywords = {physically based animation, fluid simulation}
+}
+
+@article{dewitt,
+author = {De Witt, Tyler and Lessig, Christian and Fiume, Eugene},
+title = {Fluid Simulation Using Laplacian Eigenfunctions},
+year = {2012},
+issue_date = {January 2012},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {31},
+number = {1},
+issn = {0730-0301},
+url = {https://doi.org/10.1145/2077341.2077351},
+doi = {10.1145/2077341.2077351},
+abstract = {We present an algorithm for the simulation of incompressible fluid phenomena that is computationally efficient and leads to visually convincing simulations with far fewer degrees of freedom than existing approaches. Rather than using an Eulerian grid or Lagrangian elements, we represent vorticity and velocity using a basis of global functions defined over the entire simulation domain. We show that choosing Laplacian eigenfunctions for this basis provides benefits, including correspondence with spatial scales of vorticity and precise energy control at each scale. We perform Galerkin projection of the Navier-Stokes equations to derive a time evolution equation in the space of basis coefficients. Our method admits closed-form solutions on simple domains but can also be implemented efficiently on arbitrary meshes.},
+journal = {ACM Trans. Graph.},
+month = {feb},
+articleno = {10},
+numpages = {11},
+keywords = {Laplacian eigenfunctions, fluid simulation, smoke, fluid, Animation, physically, based animation, geometric mechanics}
+}
+
+@inproceedings{holl2019pdecontrol,
+	  title={Learning to Control PDEs with Differentiable Physics},
+	  author={Holl, Philipp and Koltun, Vladlen and Thuerey, Nils},
+	  booktitle=ICLR,
+	  year={2019},
+	  url={https://ge.in.tum.de/publications/2020-iclr-holl/},
+}
+
+@book{pbdl,
+  title={Physics-based Deep Learning},
+  author={Nils Thuerey and Philipp Holl and Maximilian Mueller and Patrick
+          Schnell and Felix Trost and Kiwon Um},
+  url={https://physicsbaseddeeplearning.org},
+  year={2021},
+  publisher={WWW}
+}
+
+@misc{solver-in-the-loop,
+  doi = {10.48550/ARXIV.2007.00016},
+  url = {https://arxiv.org/abs/2007.00016},
+  author = {Um, Kiwon and Brand, Robert and Yun,  and {Fei} and Holl, Philipp
+            and Thuerey, Nils},
+  keywords = {Computational Physics (physics.comp-ph), Machine Learning (cs.LG),
+              FOS: Physical sciences, FOS: Physical sciences, FOS: Computer and
+              information sciences, FOS: Computer and information sciences},
+  title = {Solver-in-the-Loop: Learning from Differentiable Physics to Interact
+           with Iterative PDE-Solvers},
+  publisher = {arXiv},
+  year = {2020},
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
+
+@inproceedings{OptimizationCFD,
+  title={Optimization and Computational Fluid Dynamics},
+  author={Dominique Th{\'e}venin and G{\'a}bor Janiga},
+  year={2008}
+}
+
+@article{QuantumSim,
+title	= {Scalable Quantum Simulation of Molecular Energies},
+author	= {Peter O'Malley and Ryan Babbush and Ian Kivlichan and Jonathan Romero and Jarrod McClean and Rami Barends and Julian Kelly and Pedram Roushan and Andrew Tranter and Nan Ding and Brooks Campbell and Yu Chen and Zijun Chen and Ben Chiaro and Andrew Dunsworth and Austin Fowler and Evan Jeffrey and Anthony Megrant and Josh Mutus and Charles Neil and Chris Quintana and Daniel Sank and Ted White and Jim Wenner and Amit Vainsencher and Peter Coveney and Peter Love and Hartmut Neven and Alán Aspuru-Guzik and John Martinis},
+year	= {2016},
+URL	= {https://journals.aps.org/prx/abstract/10.1103/PhysRevX.6.031007},
+journal	= {Physical Review X},
+pages	= {031007},
+volume	= {6}
+}
+
+@book{stocker2014climate,
+  title={Climate change 2013: the physical science basis: Working Group I contribution to the Fifth assessment report of the Intergovernmental Panel on Climate Change},
+  author={Stocker, Thomas},
+  year={2014},
+  publisher={Cambridge university press}
+}
+
+@article{PlasmaControl,
+author = {Humphreys, D.A. and De Vries, Peter and Felici, F. and Sangjin, Kim and Jackson, G. and Kallenbach, A. and Kolemen, Egemen and Lister, J. and Moreau, Didier and Pironti, A. and Raupp, G. and Sauter, O. and Schuster, E. and Snipes, J. and Treutterer, W. and Walker, M.L. and Welander, A. and Winter, Axel and Zabeo, L.},
+year = {2015},
+month = {02},
+pages = {021806},
+title = {Novel aspects of plasma control in ITER},
+volume = {22},
+journal = {Physics of Plasmas},
+doi = {10.1063/1.4907901}
+}
+
+@article{backprop,
+    abstract = {We describe a new learning procedure, back-propagation, for
+                networks of neurone-like units. The procedure repeatedly adjusts
+                the weights of the connections in the network so as to minimize
+                a measure of the difference between the actual output vector of
+                the net and the desired output vector. As a result of the weight
+                adjustments, internal `hidden'units which are not part of the
+                input or output come to represent important features of the task
+                domain, and the regularities in the task are captured by the
+                interactions of these units. The ability to create useful new
+                features distinguishes back-propagation from earlier, simpler
+                methods such as the perceptron-convergence procedure1.},
+	author = {Rumelhart, David E. and Hinton, Geoffrey E. and Williams, Ronald J.},
+	date = {1986/10/01},
+	date-added = {2022-10-28 16:08:28 +0200},
+	date-modified = {2022-10-28 16:08:28 +0200},
+	doi = {10.1038/323533a0},
+	id = {Rumelhart1986},
+	isbn = {1476-4687},
+	journal = {Nature},
+	number = {6088},
+	pages = {533--536},
+	title = {Learning representations by back-propagating errors},
+	url = {https://doi.org/10.1038/323533a0},
+	volume = {323},
+	year = {1986},
+	bdsk-url-1 = {https://doi.org/10.1038/323533a0}}
+
+@book{vector-analysis1901,
+  author ={J. W. Gibbs, E. B. Wilson} ,
+  year = {1901},
+  pages={236-238},
+  note={(page 237)},
+  title = {Vector analysis},
+  url={https://archive.org/details/117714283/page/236/mode/2up?view=theater} 
+}
+@article{maccormack,
+  title={The effect of viscosity in hypervelocity impact cratering},
+  author={MacCormack, Robert W},
+  journal={Journal of spacecraft and rockets},
+  volume={40},
+  number={5},
+  pages={757--763},
+  year={2003}
+}

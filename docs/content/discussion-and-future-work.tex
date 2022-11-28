@@ -1,0 +1,51 @@
+\chapter{Discussion and Future Work}\label{chapter:discussion}
+In this work, after assessing established techniques and current research
+advancements in the related fields, we introduced a novel approach to control
+shape transitions by using the gradients of a fluid simulation technique based
+on the eigenfunctions of the vector Laplacian operator. 
+
+Owing to the reduced-order nature of the approach, we achieved speed-ups that
+usually result in convergence times of minutes even in the case of more advanced
+setups (and sub-minute, or seconds in the more straight-forward ones).
+
+At multiple points while connecting different areas to form our proposed
+solution, we resorted to baseline methods. Moving forward, our method could
+benefit from incorporating a number of state-of-the-art solutions.
+
+Although not a silver bullet, we believe that this approach complements and
+connects existing techniques in a new and exciting way, offering a fresh
+perspective on thinking about Neural Networks as universal function
+approximators. In the last part of our thesis, we consider some of the possible
+future research directions. 
+
+\subsection*{Generalizing to 3D}
+All of the introduced methods generalize to 3D in a very straightforward way. As
+shown by \citet{scalable-eigenfluids}, the Laplacian Eigenfluids technique is
+a viable simulation for three dimensional incompressible fluid flow. The
+exponential increase of simulation variables is a problem not only in forward
+simulations, but especially when computing gradients for optimizing. 
+
+\subsection*{General Improvements to the NN}
+After introducing a simple training process, and purposefully keeping our
+architecture simple, a number of improvements from the continuously expanding
+literature on \ac{DL} and \ac{AI} techniques could be incorporated to improve
+our solution.
+
+\subsection*{Improving the Loss Function}
+The loss function for the shape transition problem could also be improved in
+a number of ways. In our solution, we estimate the trajectory as a linear
+interpolation between start and end positions. Recalculating the trajectory
+based on the actual path taken by applying the control forces could potentially
+lead to more natural transition paths.
+
+Moving further, our solution could also be improved by implementing
+predictor-scheme as introduced by \citet{holl2019pdecontrol}.
+
+\subsection*{Point Sampling}
+In general, estimating functions by sampling discrete points fits into a vast
+body of existing literature. The sampling strategies introduced in
+section~\ref{section:sampling} could be expanded upon in a number ways, among
+which improving on the correspondences between the initial and target shapes is
+a noteworthy option.
+
+

@@ -1,0 +1,74 @@
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\selecthungarian
+
+%----------------------------------------------------------------------------
+% Abstract in Hungarian
+%----------------------------------------------------------------------------
+\chapter*{Kivonat}\addcontentsline{toc}{chapter}{Kivonat}
+
+Fizikai környezetünk megértése és modellezése egy régóta fennálló kihívás, ami
+rengeteg tudományterületet érint az időjárás előrejelzéstől kezdve, járművek
+tervezésén át egészen a számítógépes grafikáig. Fizikai rendszereket általában
+parciális differenciálegyenletek segítségével írunk le, amiket meglévő numerikus
+módszerekkel tudunk közelíteni. A szimuláció mellett fontos feladat lehet egy
+fizikai folyamat irányítása is.  
+
+Dolgozatom központi témája, hogy hogyan tudunk gradiens-alapú optimalizálási
+módszerek számára meglévő tudást átadni fizikai folyamatok működéséről.
+A folyamat gradiensei a felügyelt tanításban megszokott hibafüggvény értéke
+mellett arról is tudást adnak át az optimalizációnak (``ágensnek''), hogy egy
+adott pillanatban hozott döntése hogyan befolyásolja nemlineáris fizikai
+rendszerek lefolyását.
+
+Több kutatási irány összekapcsolásával azt járom körbe, hogyan tudjuk folyadékok
+viselkedését leírni és irányítani egy csökkentett dimenziójú módszer
+segítségével. Sűrűségfüggvények advekcióját mintapontokkal közelítem, amiket
+részecskeként szimulálok a folyadék sebességmezőjében. A módszer előnye, hogy
+a Laplace-operátor sajátfüggvényeinek lineáris kombinációjaként  a sebességmező
+zárt alakban mintavételezhető. Így a folyadékot a benne áramló anyagokkal
+együtt  anélkül tudjuk szimulálni, hogy a teljes tartományt számon kellene
+tartani.
+
+Dolgozatomban különböző megközelítésekkel egyre összetettebb problémákat
+modellezek. Először egyes esetek megoldására nyújtok megoldást gradiens alapú
+optimalizálás segítségével, majd általánosítva a problémát neurális hálókat
+tanítok be a fizikai folyamat kívánt módon történő irányítására.
+
+\vfill
+\selectenglish
+
+%----------------------------------------------------------------------------
+% Abstract in English
+%----------------------------------------------------------------------------
+\chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract}
+
+Understanding and modeling our environment is a great and important challenge,
+spanning many disciplines from weather and climate forecast, through vehicle
+design to computer graphics. Physical systems are usually described by Partial
+Differential Equations (PDEs), which we can approximate using established
+numerical techniques. Next to predicting outcomes, planning interactions to
+control physical systems is also a long-standing problem.
+
+In our work, we investigate the use of Laplacian eigenfunctions to model and
+control fluid flow. We make use of an explicit description of our simulation
+domain to derive gradients of the physical simulation. By leveraging current
+advances in physics-based deep learning, we provide knowledge to the
+optimization methods on the underlying model equations governing non-linear
+physical problems.
+
+We introduce different approaches to model physics-based optimization problems
+of increasing complexity. First, we provide a solution to solve individual
+problems by gradient-based optimization techniques, building up to a generalized
+solution by training neural networks to control the physical process to achieve
+desired outcomes.
+
+\vfill
+\cleardoublepage
+
+\selectthesislanguage
+
+\newcounter{romanPage}
+\setcounter{romanPage}{\value{page}}
+\stepcounter{romanPage}
