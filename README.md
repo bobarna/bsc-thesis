@@ -1,5 +1,4 @@
-# Reduced Order Modeling of Fluid Dynamics
-## BSc Thesis
+# Reduced Order Modeling of Fluid Dynamics (BSc Thesis)
 ### Barnabás Börcsök, Advisor: Prof. László Szécsi, PhD
 #### Budapest University of Technology and Economics
 
