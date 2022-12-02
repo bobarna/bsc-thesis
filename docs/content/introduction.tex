@@ -1,25 +1,47 @@
 \chapter{\bevezetes}
 
 Data helps us model and understand our world more truthfully. Enabling the
-processing of the ever increase volume of data, and running more precise
+processing of the ever increasing volume of data, and running more precise
 simulations necessitate continuous engineering efforts.
 
 An underlying assumption of model-reduction based techniques is that
 a low-dimensional structure can be found in high-dimensional data. This same
-assumption serves as the basis of many data processing applications
-\mytodo{image processing: eigenfaces, PCA, etc...}. Fluid simulation data has
-also been shown to exhibit lower-dimensional structure.
-\mytodo[inline]{In \url{https://github.com/wiewel/LatentSpaceSubdivision}, they
-learn this lower-dimensional embedding via a NN, and also learn the time
-advancement operator in this lower dimension.} 
+assumption serves as the basis of many data processing techniques and
+applications. An early example is the eigenface approach for solving the
+computer vision problem of face recognition. \citet{eigenface1987} showed that
+Principal Component Analysis (PCA) can be used on a set of face images to form
+a set of basis features. These underlying principal features could then be used
+to reconstruct these (or even brand new) human faces.
 
-\mytodo[inline]{How much to say here? Move some of this to the Previous Work
-section?}
+More formally, we can define an encoder function $f_e(\vb{x}) = \vb{c}$, that
+transforms some high-dimensional discretized data $\vb{x}$ into an encoding
+$\vb{c} \in \mathbb{R}^{N}$ with low dimensionality $N$. A decoder function
+$f_d(\vb{c}) = \vb{x}$ reverses the mapping. Thus, $f_e$ and $f_d$ forms an
+encoder-decoder model. The high-dimensional data $\vb{x}$ could be anything from
+images of human faces to attributes of a fluid flow, such as a spatio-temporal
+pressure function or a velocity field. To reiterate once more, the goal is to
+find the underlying low-dimensional structure in any of these datasets.\todo{is
+this academic-enough, language-wise?}
+
+Whereas the evolution of physics systems is known for many practical
+use-cases\todo{is this precise enough?} (see
+chapter~\ref{chapter:fluid-simulation} on fluid simulation), devising a time
+stepping scheme in the space of the lower-dimensional embedding $\vb{c}$ is
+a further problem: finding a function $f_t(\vb{c}^t) = \vb{c}^{t+1}$ that
+evolves our system forward in time to the next time step $\vb{c}^{t+1}$ in the
+reduced dimension.\todo{Is this understandable at this point, or is this too
+much?}
+
+Introduced in section~\ref{section:neural-networks}, Neural Networks (NNs) are
+universal function approximators.  \citet{LatentSpaceSubdivision} and
+\citet{Wiewel2019LatentSP} show that it is possible to learn $f_e$, $f_d$ and
+$f_t$ for fluid flow simulation via NNs.
 
 Positioned at the crossroads of physical simulation, and deep learning
 techniques, our work is inspired by current advances in physics-based deep
 learning. We investigate the general problem of controlling simulation
-parameters to achieve target outcomes.
+parameters to achieve target outcomes.\todo{did this part get pushed too far into the
+section?}
 
 Our novel method solves problems in fluid simulation by utilizing gradients of
 a differentiable physics simulation. More specifically, we use gradients from
@@ -28,14 +50,15 @@ Laplacian operator. Instead of simulating the full domain, a reduced dimensional
 space is utilized, resulting in significant speed-ups. We show some of the
 possibilities arising when differentiating a Laplacian eigenfluids simulation,
 and investigate how the resulting gradients can drive optimization in different
-scenarios.
+scenarios.\todo{should I use the $f_e$, $f_d$, $f_t$ notation introduced
+earlier, or is this OK like this?}
 
-In this chapter, we briefly discuss previous research that served as inspiration
-as well as a base for our current work. We also give an overview of the overall
-structure of our thesis. 
+In the remainder of this chapter, we briefly discuss previous research that
+served as inspiration as well as a base for our current work. We also give an
+overview of the overall structure of our thesis. 
 
 \section{Previous Work}
-\todo[inline]{Reduced Order Modeling}
+\todo{Maybe move the reduced-order modeling part from above here?}
 \subsection{Fluid Simulation}
 Most simulation methods are based on either an Eulerian (i.e.  grid-based), or
 Lagrangian (i.e. particle-based) representation of the fluid.  For an overview
