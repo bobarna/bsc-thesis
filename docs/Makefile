@@ -1,4 +1,4 @@
-PAPER := bsc_thesis
+PAPER := bsc-thesis
 BUILD_DIR := ./build
 
 ARTIFACT_DIR := ../artifacts
@@ -13,7 +13,7 @@ artifacts: $(PAPER).pdf
 	mkdir $(ARTIFACT_DIR)
 	mv $< $(ARTIFACT_DIR)
 
-# Call with e.g. "make main.pdf"
+# Call with e.g. "make bsc-thesis.pdf"
 %.pdf: %.tex $(CONTENT_TEX)
 	pdflatex $<
 	- bibtex $*
@@ -30,3 +30,4 @@ clean:
 	rm -f comment.cut $(PAPER).$(BUILD_EXTENSIONS) 
 	rm -f content/*.$(BUILD_EXTENSIONS)
 	rm -f *-converted-to.pdf
+	rm *.lot *.lof

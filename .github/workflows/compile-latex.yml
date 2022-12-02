@@ -9,7 +9,7 @@ jobs:
   deploy_thesis:
     runs-on: ubuntu-latest
     env:
-      FILE: bsc_thesis.pdf
+      FILE: bsc-thesis.pdf
       DIR: docs
     steps:
       - name: Checkout
