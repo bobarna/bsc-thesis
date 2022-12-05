@@ -10,7 +10,18 @@ In the following,
     \vb{j} = \mqty( 0 \\ 1 \\ 0 )\quad
     \vb{k} = \mqty( 0 \\ 0 \\ 1 )
 \end{equation*}
-will denote the canonical basis vectors.
+will denote the canonical basis vectors, and
+\begin{equation*}
+    \vb{I}_n =
+    \begin{pmatrix}
+        1 & 0 & \cdots & 0 \\
+        0 & 1 & \cdots & 0 \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0 & 0 & \cdots & 1
+    \end{pmatrix}
+\end{equation*}
+is the $n\times n$ diagonal \textit{identity matrix}. For brevity, we often omit
+the dimension $n$, where it is self-explanatory.
 
 \section{Basic Notation}
 $\vb{x} \in \mathbb{R}^n$ is considered a column-matrix, i.e. $\mathbb{R}^n
@@ -36,13 +47,79 @@ $\vb{u}$ to denote the velocity of a fluid. It is hard to say where this
 notation came from, but it fits another convention to call the three components
 of 3D velocity $(u, v, w)^T$ (dropping $w$ for the 2D case).
 
-\section{Eigenvalues, Eigenfunctions}
-\todo[inline]{Eigenvalues, eigenfunctions.}
-\todo[inline]{Introduce SVD and Fourier transform as examples of extracting
-lower-dimensional structure from high-dimensional data. Also mention PCA... and
-refer to literature on them.}
+\section{Eigenvectors, Eigenvalues, and Eigenfunctions}
+Eigenvalue problems are a class of linear equations of fundamental importance.
+They take the form
+\begin{equation}\label{eq:eigen}
+    \vb{A}\vb{x} = \lambda\vb{x},
+\end{equation}
+where the unknowns are the \textit{eigenvectors} $\vb{x}$ and the corresponding
+\textit{eigenvalues} $\lambda$.
+
+\todo[inline]{How much more should we expand on eigenvectors and eigenvalues?
+Maybe on how to compute them? They are not that relevant to the thesis, to be
+honest... Maybe link to some good resources on the topic? Which ones?}
+
+A generalization of equation~\ref{eq:eigen} gives rise to the notion of
+\textit{eigenfunctions}:
+\begin{equation}\label{eq:eigenfunction}
+    D f = \lambda f.
+\end{equation}
+Defining the linear operator $D$ on a function space, we call any 
+function $f$ the \textit{eigenfunction} of $D$, that simply gets multiplied by a
+scaling factor $\lambda$, when acted upon by $D$. Note that any matrix
+$\vb{A}$ can already be thought of as a linear operator between two
+finite-dimensional spaces.
+
+Equations in the form of \ref{eq:eigenfunction} may also be subject to
+boundary conditions. In section~\ref{section:laplacian-eigenfluids}, we
+introduce the eigenfunctions of the Laplacian operator with the intent of
+describing a fluid flow inside a closed domain. As such, in
+equation~\ref{eq:eigenfunction-fully-characterized}, we require these
+eigenfunctions to adhere to a free-slip boundary condition, i.e. do not let the
+fluid flow out of our domain.
+
+\section{Singular Value Decomposition (SVD)}
+\todo[inline]{Introduce \textbf{SVD} and \textbf{Fourier transform} as examples
+of extracting lower-dimensional structure from high-dimensional data. Also
+mention \textbf{PCA}... and refer to literature on them.}
+
 \todo[inline]{Add image examples of truncated principal components of an image
 from SVD. Problem: that's not really mathematical foundation. }
+
+\section{Fourier Transforms}
+Fourier transforms have a wide range of applicability, concerning essentially
+all engineering disciplines. The key idea is to express any function and its
+derivatives as sums of sines and cosines. We restrict ourselves to discuss only
+some basic properties relevant in the scope of our current use-case. For a more
+exhaustive description of Fourier Transforms and their applications, see ...
+.\todo{Does it add value to link to some ``exhaustive description of Fourier
+Transforms''?}
+
+The Fourier transform and its inverse are defined as
+\begin{align*}
+    F(k) &= \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}e^{ikx}f(x)dx \\
+    f(x) &= \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}e^{-ikx}F(k)dk.
+\end{align*}
+
+Note that although the Fourier transform is defined as an integral over the
+entire number line $[-\infty, +\infty]$, the Fast Fourier Transform (FFT)
+algorithm computes a discretized version over a finite domain $x \in [-L, +L]$,
+and has been described ``the most important numerical algorithm of our
+lifetime'' \citep{fft-important}. A key to the FFT's operation count of $O(N
+\log N)$ is that it discretizes the range $x \in [-L, +L]$ into $2^n$ (i.e.
+$2,4,8,16,32,64\dots$).\todo{is this unnecessary info?}
+
+The Kernel of the transform, $\exp(\pm ikx) = \cos(kx) \pm i\sin(kx)$ describes
+oscillatory behavior. The Fourier transform is essentially an eigenfunction
+expansion over all continuous wavenumbers $k$.\todo{What is the eigenfunction
+part in the FT equations?}
+
+\todo[inline]{Kernel of a linear transformation $T: V\mapsto W$: is the set of
+vectors from $V$ that gets mapped to the zero vector in $W$. Is this what they
+refer to?}
+
+\todo[inline]{Should I cite textbooks on math foundations stuff?}
 
 \section{Multivariable Calculus}
 \subsection*{Gradient}
