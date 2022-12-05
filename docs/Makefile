@@ -23,7 +23,7 @@ artifacts: $(PAPER).pdf
 move:
 	rm -rf $(BUILD_DIR)
 	mkdir $(BUILD_DIR)
-	mv *.pdf $(BUILD_DIR)/
+	mv $(PAPER).pdf $(BUILD_DIR)/
 
 .PHONY: clean
 clean:
