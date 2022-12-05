@@ -79,22 +79,11 @@ equation~\ref{eq:eigenfunction-fully-characterized}, we require these
 eigenfunctions to adhere to a free-slip boundary condition, i.e. do not let the
 fluid flow out of our domain.
 
-\section{Singular Value Decomposition (SVD)}
-\todo[inline]{Introduce \textbf{SVD} and \textbf{Fourier transform} as examples
-of extracting lower-dimensional structure from high-dimensional data. Also
-mention \textbf{PCA}... and refer to literature on them.}
-
-\todo[inline]{Add image examples of truncated principal components of an image
-from SVD. Problem: that's not really mathematical foundation. }
-
 \section{Fourier Transforms}
 Fourier transforms have a wide range of applicability, concerning essentially
 all engineering disciplines. The key idea is to express any function and its
 derivatives as sums of sines and cosines. We restrict ourselves to discuss only
-some basic properties relevant in the scope of our current use-case. For a more
-exhaustive description of Fourier Transforms and their applications, see ...
-.\todo{Does it add value to link to some ``exhaustive description of Fourier
-Transforms''?}
+some basic properties relevant in the scope of our current use-case. 
 
 The Fourier transform and its inverse are defined as
 \begin{align*}
@@ -110,7 +99,7 @@ lifetime'' \citep{fft-important}. A key to the FFT's operation count of $O(N
 \log N)$ is that it discretizes the range $x \in [-L, +L]$ into $2^n$ (i.e.
 $2,4,8,16,32,64\dots$).\todo{is this unnecessary info?}
 
-The Kernel of the transform, $\exp(\pm ikx) = \cos(kx) \pm i\sin(kx)$ describes
+The kernel of the transform, $\exp(\pm ikx) = \cos(kx) \pm i\sin(kx)$ describes
 oscillatory behavior. The Fourier transform is essentially an eigenfunction
 expansion over all continuous wavenumbers $k$.\todo{What is the eigenfunction
 part in the FT equations?}
@@ -119,7 +108,13 @@ part in the FT equations?}
 vectors from $V$ that gets mapped to the zero vector in $W$. Is this what they
 refer to?}
 
-\todo[inline]{Should I cite textbooks on math foundations stuff?}
+\todo[inline]{Is this right? (I know that the Fourier transform is a huge topic
+with a deep breadth, and I don't want to upset any mathematicians nor engineers.
+:) )}
+
+\cite{BruntonKnutz2019} discuss not only the Fourier transform, but also many
+other modern methods in data science, with an extensive discussion of reduced
+order models.
 
 \section{Multivariable Calculus}
 \subsection*{Gradient}

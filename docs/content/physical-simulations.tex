@@ -217,25 +217,39 @@ use of an inductive physical bias to find solutions of an inverse problem.
 \end{figure}
 
 \section{Reduced Order Physical Simulations}
+\todo[inline]{This is a new section, giving an introduction, and laying out the
+motivation behind reduced order modeling, and leads up to introducing the
+Eigenfluids algorithm in the next chapter.}
+
 High-dimensional data usually exhibits lower-dimensional
-structure.
+structure. This is an assumption underlying many applications concerned with
+handling huge amounts of data.
 
-\todo[inline]{examples of SVD, Fourier transform on images, and on curl fields}
+Learning underlying structure is the main idea of the Singular
+Value Decomposition, which can be used to extract principal components of
+a system, called Principal Component Analysis (PCA). An early application
+example is the Eigenfaces paper by \cite{eigenface1987}, where they use
+PCA on a collection of face images to form a set of basis features.
 
-Although we can see that a lower-dimensional representation can yield comparable
-details, simulating the evolution in this representation is usually not
-straightforward.
+Describing a system with fewer numbers is an especially intriguing direction for
+physical simulations, where a more detailed simulation involves (a usually
+exponentially) increased computation time. For more details and examples, see
+\cite{BruntonKnutz2019}.
 
-Frame the problem as learning $f_{\text{encoder}}$,
-$f_{\text{decoder}}$, and $f_{\text{time integration}}$ functions.
+For implementing a physical simulation in a reduced dimensional space, one has
+to consider three function. An encoder function $f_e(\vb{x}) = \vb{c}$
+transforms some high-dimensional discretized data $\vb{x}$ into an encoding
+$\vb{c} \in \mathbb{R}^{N}$ with low dimensionality $N$. A decoder function
+$f_d(\vb{c}) = \vb{x}$ reverses the mapping. Thus, $f_e$ and $f_d$ form an
+encoder-decoder model. The high-dimensional data $\vb{x}$ could be anything from
+images of human faces to attributes of a fluid flow, such as a spatio-temporal
+pressure function or a velocity field. Lastly, for simulation purposes we have
+to find a function $f_t(\vb{c}^t) = \vb{c}^{t+1}$ that evolves our system
+forward in time to the next time step $\vb{c}^{t+1}$ in the reduced dimension.
 
-NNs can learn these functions.
-\todo{Introduce NN approximations for these functions}
-
-The change-of-basis, as well as time advancement operators can also be deduced
-in an analytical fashion. In section~\ref{section:laplacian-eigenfluids}, we
-will look at this method applied to simulating fluid dynamics in
-a reduced-dimensional space.
-
-
-
+Although current advancements show that it is possible to learn $f_e$, $f_d$ and
+$f_t$ for fluid flow simulation via NNs \cite{LatentSpaceSubdivision,
+Wiewel2019LatentSP}, the change-of-basis, as well as time advancement operators
+can also be deduced in an analytical fashion. In
+section~\ref{section:laplacian-eigenfluids}, we introduce a method in more
+detail for simulating fluid dynamics in a reduced-dimensional space. 
