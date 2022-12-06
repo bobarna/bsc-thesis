@@ -19,18 +19,15 @@ $\vb{c} \in \mathbb{R}^{N}$ with low dimensionality $N$. A decoder function
 $f_d(\vb{c}) = \vb{x}$ reverses the mapping. Thus, $f_e$ and $f_d$ form an
 encoder-decoder model. The high-dimensional data $\vb{x}$ could be anything from
 images of human faces to attributes of a fluid flow, such as a spatio-temporal
-pressure function or a velocity field. To reiterate once more, the goal is to
-find the underlying low-dimensional structure in any of these datasets.\todo{is
-this academic-enough, language-wise?}
+pressure function or a velocity field. The goal is to find the underlying
+low-dimensional structure in any of these datasets.
 
-Whereas the evolution of physics systems is known for many practical
-use-cases\todo{is this precise enough?} (see
-chapter~\ref{chapter:fluid-simulation} on fluid simulation), devising a time
-stepping scheme in the space of the lower-dimensional embedding $\vb{c}$ is
-a further problem: finding a function $f_t(\vb{c}^t) = \vb{c}^{t+1}$ that
+Whereas the evolution of physics systems is known for many practical use-cases
+(see chapter~\ref{chapter:fluid-simulation} on fluid simulation), devising
+a time stepping scheme in the space of the lower-dimensional embedding $\vb{c}$
+is a further problem: finding a function $f_t(\vb{c}^t) = \vb{c}^{t+1}$ that
 evolves our system forward in time to the next time step $\vb{c}^{t+1}$ in the
-reduced dimension.\todo{Is this understandable at this point, or is this too
-much?}
+reduced dimension.
 
 Introduced in section~\ref{section:neural-networks}, Neural Networks (NNs) are
 universal function approximators.  \citet{LatentSpaceSubdivision} and
@@ -40,8 +37,7 @@ $f_t$ for fluid flow simulation via NNs.
 Positioned at the crossroads of physical simulation, and deep learning
 techniques, our work is inspired by current advances in physics-based deep
 learning. We investigate the general problem of controlling simulation
-parameters to achieve target outcomes.\todo{did this part get pushed too far into the
-section?}
+parameters to achieve target outcomes.
 
 Our novel method solves problems in fluid simulation by utilizing gradients of
 a differentiable physics simulation. More specifically, we use gradients from
@@ -50,8 +46,7 @@ Laplacian operator. Instead of simulating the full domain, a reduced dimensional
 space is utilized, resulting in significant speed-ups. We show some of the
 possibilities arising when differentiating a Laplacian eigenfluids simulation,
 and investigate how the resulting gradients can drive optimization in different
-scenarios.\todo{should I use the $f_e$, $f_d$, $f_t$ notation introduced
-earlier, or is this OK like this?}
+scenarios.
 
 In the remainder of this chapter, we briefly discuss previous research that
 served as inspiration as well as a base for our current work. We also give an

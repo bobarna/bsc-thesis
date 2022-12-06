@@ -56,10 +56,6 @@ They take the form
 where the unknowns are the \textit{eigenvectors} $\vb{x}$ and the corresponding
 \textit{eigenvalues} $\lambda$.
 
-\todo[inline]{How much more should we expand on eigenvectors and eigenvalues?
-Maybe on how to compute them? They are not that relevant to the thesis, to be
-honest... Maybe link to some good resources on the topic? Which ones?}
-
 A generalization of equation~\ref{eq:eigen} gives rise to the notion of
 \textit{eigenfunctions}:
 \begin{equation}\label{eq:eigenfunction}
@@ -93,24 +89,15 @@ The Fourier transform and its inverse are defined as
 
 Note that although the Fourier transform is defined as an integral over the
 entire number line $[-\infty, +\infty]$, the Fast Fourier Transform (FFT)
-algorithm computes a discretized version over a finite domain $x \in [-L, +L]$,
-and has been described ``the most important numerical algorithm of our
+algorithm computes a discretized version (DFT) over a finite domain $x \in [-L,
++L]$, and has been described ``the most important numerical algorithm of our
 lifetime'' \citep{fft-important}. A key to the FFT's operation count of $O(N
 \log N)$ is that it discretizes the range $x \in [-L, +L]$ into $2^n$ (i.e.
-$2,4,8,16,32,64\dots$).\todo{is this unnecessary info?}
+$2,4,8,16,32,64\dots$).
 
 The kernel of the transform, $\exp(\pm ikx) = \cos(kx) \pm i\sin(kx)$ describes
 oscillatory behavior. The Fourier transform is essentially an eigenfunction
-expansion over all continuous wavenumbers $k$.\todo{What is the eigenfunction
-part in the FT equations?}
-
-\todo[inline]{Kernel of a linear transformation $T: V\mapsto W$: is the set of
-vectors from $V$ that gets mapped to the zero vector in $W$. Is this what they
-refer to?}
-
-\todo[inline]{Is this right? (I know that the Fourier transform is a huge topic
-with a deep breadth, and I don't want to upset any mathematicians nor engineers.
-:) )}
+expansion over all continuous wavenumbers $k$.
 
 \cite{BruntonKnutz2019} discuss not only the Fourier transform, but also many
 other modern methods in data science, with an extensive discussion of reduced

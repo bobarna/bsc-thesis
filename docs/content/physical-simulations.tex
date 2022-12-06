@@ -217,10 +217,6 @@ use of an inductive physical bias to find solutions of an inverse problem.
 \end{figure}
 
 \section{Reduced Order Physical Simulations}
-\todo[inline]{This is a new section, giving an introduction, and laying out the
-motivation behind reduced order modeling, and leads up to introducing the
-Eigenfluids algorithm in the next chapter.}
-
 High-dimensional data usually exhibits lower-dimensional
 structure. This is an assumption underlying many applications concerned with
 handling huge amounts of data.
@@ -237,7 +233,7 @@ exponentially) increased computation time. For more details and examples, see
 \cite{BruntonKnutz2019}.
 
 For implementing a physical simulation in a reduced dimensional space, one has
-to consider three function. An encoder function $f_e(\vb{x}) = \vb{c}$
+to consider three functions. An encoder function $f_e(\vb{x}) = \vb{c}$
 transforms some high-dimensional discretized data $\vb{x}$ into an encoding
 $\vb{c} \in \mathbb{R}^{N}$ with low dimensionality $N$. A decoder function
 $f_d(\vb{c}) = \vb{x}$ reverses the mapping. Thus, $f_e$ and $f_d$ form an
